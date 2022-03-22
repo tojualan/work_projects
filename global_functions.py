@@ -20,3 +20,5 @@ mstar = 8*np.pi*vw*2*np.sqrt(8*np.pi**3*gstar/(90*MPl**2))
 def hub(T):
     return T**2*np.sqrt(8*np.pi**3*geff(T)/(90*MPl**2))
 
+def delta(a,b,c):
+    return (a-b-c)**2-4*b*c
