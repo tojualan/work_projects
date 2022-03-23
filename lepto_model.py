@@ -7,7 +7,7 @@ class model0:
     Model for two RHNs + singlet scalar
     """
 
-    def __init__(self, M1 = 2000, M2=4000, K1 = 7.8, K2 = 46, K12 = 390000,
+    def __init__(self, M1 = 2000, M2=4000, K1 = 7.8, K2 = 46, K12 = 397250,
                  beta = 100, alpha1 = 0.0015, alpha2 = 0.0015, MS = 1000):
         """
         Initialize model parameters
@@ -81,7 +81,9 @@ class model0:
 
     def fijlRR(self,i,j,l):
         return (0.5*np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i)))
-                /(1-self.rji(i,l)))
+                /(1-self.rji(i,l))*np.sqrt(self.rji(i,l))
+                *np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i))
+                         +4*self.rji(i,j)))
 
     def f0v(self,i,j):
         return (np.sqrt(self.rji(i,j))
@@ -116,7 +118,7 @@ class model0:
         self.eps2v = (self.alpha12*self.beta/(8*np.pi*self.M2)
                       *np.sqrt(self.M1/self.M2)*(self.fijLL(2,1)
                                                  +self.fijRL(2,1)))
-        self.eps2w = ((self.alpha1*self.alpha12)/(8*np.pi)\
+        self.eps2w = ((self.alpha1*self.alpha12)/(8*np.pi)
                       *np.sqrt(self.M1/self.M2)
                       *(self.fijlLL(2,1,1)+self.fijlRL(2,1,1)
                         +self.fijlLR(2,1,1)+self.fijlRR(2,1,1)))
@@ -129,14 +131,12 @@ class model0:
 if __name__=='__main__':
     m0 = model0()
     m0.get_alpha12()
-    print(m0.fijRL(1,2))
-    print(m0.fijRL(1, 2))
-    
-
+    print(m0.alpha12)
+    print('\n')
     m0.get_epsilons()
-    print(m0.eps20)
-    print(m0.eps2v)
-    print(m0.eps2w)
+    # print(m0.eps20)
+    # print(m0.eps2v)
+    # print(m0.eps2w)
 
 
 
