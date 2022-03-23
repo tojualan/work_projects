@@ -116,7 +116,7 @@ class model0:
         """
         asymmetry coefficients, v-vertex, w-wave function
         """
-        self.eps10 = 3*self.M1*gl.Smnu/(8*np.pi*gl.vw**2)
+        self.eps1 = 3*self.M1*gl.Smnu/(8*np.pi*gl.vw**2)
         self.eps20 = (self.M1*gl.Smnu/(8*np.pi*gl.vw**2)\
                       *np.abs(self.f0v(2,1)+self.f0w(2,1)))
         self.eps2v = (self.alpha12*self.beta/(8*np.pi*self.M2)
