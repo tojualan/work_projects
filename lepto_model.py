@@ -59,6 +59,36 @@ class model0:
                            + 4 * self.rji(i, j).self.sigi(i))
                  + np.sqrt(gl.delta(1, self.rji(i, j), self.sigi(i))))
                 )
+    def fijLL(self, i, j):
+        return (-np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i)))
+                +self.rji(i,j)*np.log(self.gij(i,j)))
+
+    def fijRL(self, i, j):
+        return (-np.sqrt(self.rji(i,j))*np.sqrt(gl.delta(1,self.rji(i,j),
+                                                         self.sigi(i)))
+                +np.sqrt(self.rji(i,j))*np.log(self.gij(i,j)))
+    def fijlLL(self,i,j,l):
+        return (0.5*np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i)))
+                *(np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i))
+                          +4*self.rji(i,j))/(1-self.rji(i,l))))
+    def fijlLR(self,i,j,l):
+        return (np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i)))
+                *(np.sqrt(self.rji(i,j)*self.rji(i,l))/(1-self.rji(i,l))))
+
+    def fijlRL(self,i,j,l):
+        return (np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i)))
+                *(np.sqrt(self.rji(i,j))/(1-self.rji(i,l))))
+
+    def fijlRR(self,i,j,l):
+        return (0.5*np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i)))
+                /(1-self.rji(i,l)))
+
+    def f0v(self,i,j):
+        return (np.sqrt(self.rji(i,j))
+                *(1-(1+self.rji(i,j))*np.log((1+self.rji(i,j))/self.rji(i,j))))
+
+    def f0w(self,i,j):
+        return np.sqrt(self.rji(i,j))/(1-self.rji(i,j))
 
     def get_alpha12(self):
         """
@@ -77,7 +107,23 @@ class model0:
         return 0
 
     def get_epsilons(self):
-        pass
+        """
+        asymmetry coefficients, v-vertex, w-wave function
+        """
+        self.eps10 = 3*self.M1*gl.Smnu/(8*np.pi*gl.vw**2)
+        self.eps20 = (self.M1*gl.Smnu/(8*np.pi*gl.vw**2)\
+                      *np.abs(self.f0v(2,1)+f0w(2,1)))
+        self.eps2v = (self.alpha12*self.beta/(8*np.pi*self.M2)
+                      *np.sqrt(self.M1/self.M2)*(self.fijLL(2,1)+fijRL(2,1)))
+        self.eps2w = ((self.alpha1*self.alpha12)/(8*np.pi)\
+                      *np.sqrt(self.M1/self.M2)
+                      *(self.fijlLL(2,1,1)+self.fijlRL(2,1,1)
+                        +self.fijlLR(2,1,1)+self.fijlRR(2,1,1)))
+        self.eps2vw0 = self.eps20+np.abs(self.eps2v+self.eps2w)
+
+        return 0
+
+
 
 if __name__=='__main__':
     m0 = model0()
