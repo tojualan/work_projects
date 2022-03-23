@@ -40,7 +40,7 @@ class model0:
             return 0
 
     def rji(self,i,j):
-        return self.mi(j)/self.mi(i)
+        return self.mi(j)**2/self.mi(i)**2
 
     def sigi(self,i):
         return self.MS**2/self.mi(i)**2
@@ -50,13 +50,13 @@ class model0:
                         +4*self.rji(i,j)*self.sigi(i)+2*self.sigi(i))
                 +np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i)))
                 *np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i))
-                         +4*self.rji(i,j).self.sigi(i))
+                         +4*self.rji(i,j)*self.sigi(i))
                 -np.sqrt(gl.delta(1,self.rji(i,j),self.sigi(i))))/
                 (np.sqrt(gl.delta(1, self.rji(i, j), self.sigi(i))
                          + 4 * self.rji(i, j) * self.sigi(i) + 2 *self.sigi(i))
                  - np.sqrt(gl.delta(1, self.rji(i, j), self.sigi(i)))
                  * np.sqrt(gl.delta(1, self.rji(i, j), self.sigi(i))
-                           + 4 * self.rji(i, j).self.sigi(i))
+                           + 4 * self.rji(i, j)*self.sigi(i))
                  + np.sqrt(gl.delta(1, self.rji(i, j), self.sigi(i))))
                 )
     def fijLL(self, i, j):
@@ -95,10 +95,10 @@ class model0:
         off-diagonal Yukawa
         off-diagonal Yukawa
         """
-        al12 = np.sqrt(self.K12*(self.M2/(16*np.pi)*((1+self.M1/self.M2)**2-
-                                                     self.MS**2/self.M2**2)
+        al12 = np.sqrt(self.K12*(self.M2/(16*np.pi)*((1+self.M1/self.M2)**2
+                                                     -self.MS**2/self.M2**2)
                                  *np.sqrt((1-self.M1**2/self.M2**2
-                                           -self.MS**2/self.M1**2)**2
+                                           -self.MS**2/self.M2**2)**2
                                           -4*(self.M1/self.M2
                                               *self.MS/self.M2)**2)
                                  /gl.hub(self.M2))**(-1))
@@ -112,9 +112,10 @@ class model0:
         """
         self.eps10 = 3*self.M1*gl.Smnu/(8*np.pi*gl.vw**2)
         self.eps20 = (self.M1*gl.Smnu/(8*np.pi*gl.vw**2)\
-                      *np.abs(self.f0v(2,1)+f0w(2,1)))
+                      *np.abs(self.f0v(2,1)+self.f0w(2,1)))
         self.eps2v = (self.alpha12*self.beta/(8*np.pi*self.M2)
-                      *np.sqrt(self.M1/self.M2)*(self.fijLL(2,1)+fijRL(2,1)))
+                      *np.sqrt(self.M1/self.M2)*(self.fijLL(2,1)
+                                                 +self.fijRL(2,1)))
         self.eps2w = ((self.alpha1*self.alpha12)/(8*np.pi)\
                       *np.sqrt(self.M1/self.M2)
                       *(self.fijlLL(2,1,1)+self.fijlRL(2,1,1)
@@ -128,7 +129,14 @@ class model0:
 if __name__=='__main__':
     m0 = model0()
     m0.get_alpha12()
-    print(gl.geff(100))
-    print(m0.alpha12)
+    print(m0.fijRL(1,2))
+    print(m0.fijRL(1, 2))
+    
+
+    m0.get_epsilons()
+    print(m0.eps20)
+    print(m0.eps2v)
+    print(m0.eps2w)
+
 
 
