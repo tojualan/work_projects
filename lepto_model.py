@@ -23,6 +23,10 @@ class model0:
         self.alpha1 = alpha1
         self.alpha2 = alpha2
 
+        #calculate the off-diagonal Yukawa + epsilons
+        self.get_alpha12()
+        self.get_epsilons()
+
     def mi(self,i):
         if i==1:
             return self.M1
@@ -130,13 +134,13 @@ class model0:
 
 if __name__=='__main__':
     m0 = model0()
-    m0.get_alpha12()
+    # m0.get_epsilons()
     print(m0.alpha12)
     print('\n')
-    m0.get_epsilons()
-    # print(m0.eps20)
-    # print(m0.eps2v)
-    # print(m0.eps2w)
+
+    print(m0.eps20)
+    print(m0.eps2v)
+    print(m0.eps2w)
 
 
 
