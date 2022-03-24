@@ -1,6 +1,8 @@
 import lepto_model as lm
 import scipy.special
 import scipy.integrate
+import matplotlib.pyplot as plt
+import numpy as np
 
 class boltzmann:
     """
@@ -29,22 +31,24 @@ class boltzmann:
         return 0
 
     def BY1(self,z,y):
-        return ((-y[0]/self.Yeq(z)-1)*(self.D(z,self.m.K1)
+        return (-(y[0]/self.Yeq(z)-1)*(self.D(z,self.m.K1)
                                     +self.D(self.m.M2/self.m.M1*z,self.m.K12)
                                     +self.S1(z))
                 +(y[1]/self.Yeq(self.m.M2/self.m.M1*z)-1)
                 *(self.D(self.m.M2/self.m.M1*z,self.m.K12))
                 -(y[0]*y[1]/(self.Yeq(z)*self.Yeq(self.m.M2/self.m.M1*z))-1)
                 *self.SW(z)
-                -(y[0]**2/self.Yeq(z)**2-1)*self.SW(z))
+                -(y[0]**2/self.Yeq(z)**2-1)*self.SW(z)
+                )
     def BY2(self,z,y):
-        return ((-y[1]/self.Yeq(self.m.M2/self.m.M1*z)-1)
+        return (-(y[1]/self.Yeq(self.m.M2/self.m.M1*z)-1)
                 *(self.D(self.m.M2/self.m.M1*z,self.m.K2)
                   +self.D(self.m.M2/self.m.M1*z,self.m.K12)+self.S2(z))
                 +(y[0]/self.Yeq(z)-1)*self.D(self.m.M2/self.m.M1*z,self.m.K12)
                 -(y[0]*y[1]/(self.Yeq(z)*self.Yeq(self.m.M2/self.m.M1*z))-1)
                 *self.SW(z)
-                -(y[1]**2/self.Yeq(self.m.M2/self.m.M1*z)**2-1)*self.SW(z))
+                -(y[1]**2/self.Yeq(self.m.M2/self.m.M1*z)**2-1)*self.SW(z)
+                )
 
     def BYL(self,z,y):
         return (self.m.eps1*self.D(z,self.m.K1)*(y[0]/self.Yeq(z)-1)
@@ -54,14 +58,22 @@ class boltzmann:
                      +self.W(self.m.M2/self.m.M1*z,self.m.K2)))
 
     def ode_RHS(self,z,y):
-        return [self.BY1(z,y),self.BY2(z,y),self.BYL(z,y)]
+        return [self.BY1(z,y)/z,self.BY2(z,y)/z,self.BYL(z,y)/z]
 
-    def solve_boltz(self, zrange = (0.001,100), ivs=None):
+    def solve_boltz(self, zrange = (0.001,20), ivs=None):
         if ivs is None:
             ivs = [self.Yeq(0.001), self.Yeq(0.001), 0]
-        return scipy.integrate.solve_ivp(self.ode_RHS, zrange, ivs)
+            print(ivs)
+        return scipy.integrate.solve_ivp(self.ode_RHS, zrange, ivs,
+                                         method = 'Radau')
 
-
+    # def ode_RHS2(self,z,y):
+    #     return [y[0]/y[1]**2,z**2,y[0]**0.5]
+    #
+    # def solve_boltz0(self, zrange = (1,10), ivs=None):
+    #     if ivs is None:
+    #         ivs = [3, .2, 0.1]
+    #     return scipy.integrate.solve_ivp(self.ode_RHS2, zrange, ivs)
 
 
     def describe(self):
@@ -81,11 +93,17 @@ if __name__=='__main__':
 
     boltz = boltzmann(lm.model0())
     boltz.describe()
-    print('\nY1\n')
-    print(boltz.BY1(10, [1,2,3]))
-    print('\nY2')
-    print(boltz.BY2(10, [1,2,3]))
-    print('\nYL')
-    print(boltz.BYL(10, [1,2,3]))
-    print('\nAll')
-    print(boltz.ode_RHS(10, [1, 2, 3]))
+    print(boltz.ode_RHS(0.001,[3/4.,3/4.,0]))
+    res = boltz.solve_boltz()
+    print(res.t)
+    print(res.y[0]-boltz.Yeq(res.t))
+    plt.figure()
+    plt.loglog(res.t,res.y[0],label='y1')
+    plt.loglog(res.t, res.y[1],label='y2')
+    plt.loglog(res.t, 1e8*res.y[2],label='yL')
+    plt.loglog(res.t,0.11*np.ones(len(res.t)),'--')
+    plt.legend()
+    plt.ylim(1e-3,100)
+    plt.show()
+
+

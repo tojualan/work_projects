@@ -7,8 +7,8 @@ class model0:
     Model for two RHNs + singlet scalar
     """
 
-    def __init__(self, M1 = 2000, M2=4000, K1 = 7.8, K2 = 46, K12 = 390000,
-                 beta = 100, alpha1 = 0.0015, alpha2 = 0.0015, MS = 1000):
+    def __init__(self, M1 = 2000, M2=6000, K1 = 7.74, K2 = 46, K12 = 1.1e7,
+                 beta = 1000, alpha1 = 0.0015, alpha2 = 0.0015, MS = 1000):
         """
         Initialize model parameters
         """
